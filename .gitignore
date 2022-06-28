@@ -1,0 +1,9 @@
+node_modules
+build
+coverage
+report
+.env
+.vscode
+
+# stryker temp files
+.stryker-tmp
