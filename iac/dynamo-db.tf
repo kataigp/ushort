@@ -4,10 +4,15 @@ resource "aws_dynamodb_table" "url_data_table" {
   read_capacity  = 20
   write_capacity = 20
   hash_key       = "ShortUrl"
-  range_key      = "Visits"
+  range_key      = "OriginalUrlHash"
 
   attribute {
     name = "ShortUrl"
+    type = "S"
+  }
+
+  attribute {
+    name = "OriginalUrlHash"
     type = "S"
   }
 
@@ -18,11 +23,11 @@ resource "aws_dynamodb_table" "url_data_table" {
   
   global_secondary_index {
     name               = "ShortUrlIndex"
-    hash_key           = "ShortUrl"
+    hash_key           = "OriginalUrlHash"
     range_key          = "Visits"
     write_capacity     = 10
     read_capacity      = 10
     projection_type    = "INCLUDE"
-    non_key_attributes = ["UserId"]
+    non_key_attributes = ["ShortUrl"]
   }
 }

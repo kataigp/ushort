@@ -8,13 +8,14 @@
     "build": "rimraf ./build && tsc",
     "test": "jest --setupFiles=dotenv/config --verbose",
     "test:coverage": "jest --collect-coverage",
-    "deploy": "npm i && npm run build && rm -rf ./node_modules && npm i --production && cp -r node_modules build && zip-build build dist --name -t %NAME%_lambda.%EXT%"
+    "deploy": "rm -rf ./dist && npm i && npm run build && rm -rf ./node_modules && npm i --production && cp -r node_modules build && zip-build build dist --name -t %NAME%_lambda.%EXT%"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^15.0.0",
     "fs": "^0.0.1-security",
+    "object-hash": "^3.0.0",
     "typescript": "^4.6.3",
     "zip-build": "^1.7.0"
   },
@@ -25,9 +26,10 @@
     "@stryker-mutator/core": "^5.6.1",
     "@stryker-mutator/jest-runner": "^5.6.1",
     "@types/jest": "^27.4.1",
-    "@types/node": "^17.0.42",
+    "@types/node": "^17.0.45",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
+    "aws-sdk": "^2.1163.0",
     "babel-jest": "^27.4.6",
     "eslint": "^8.12.0",
     "eslint-config-airbnb-base": "^15.0.0",

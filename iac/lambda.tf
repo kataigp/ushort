@@ -8,6 +8,7 @@ resource "aws_lambda_permission" "apigw_ushort_lambda" {
 }
 
 resource "aws_lambda_function" "ushort_lambda" {
+  source_code_hash = filebase64sha256("../dist/ushort_lambda.zip")
   filename = "../dist/ushort_lambda.zip"
   function_name = "UrlShortener"
   role          = aws_iam_role.ushort_lambda_role.arn
@@ -15,6 +16,7 @@ resource "aws_lambda_function" "ushort_lambda" {
   runtime       = "nodejs14.x"
   environment {
     variables = {
+      "REGION"    = "${var.aws_region}",
       "BASE_URL" = "${var.base_url_prefix}"
     }
   }

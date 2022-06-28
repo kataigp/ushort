@@ -1,13 +1,28 @@
-import { Status } from './types/status.enum';
-import { createResponse } from './utils/common.utils';
+import hash from 'object-hash';
 
-const BASE_URL = process.env.BASE_URL;
+import { Status } from './types/status.enum';
+import { getItem, putItem } from './utils/aws.utils';
+import { createResponse, getRequestURL, ok200 } from './utils/common.utils';
+import { createShortUrl } from './utils/url.utils';
 
 export const handler = async (event: any, context: any, callback: any) => {
+  let requestUrl: string = '';
   try {
-    const request = event.Records[0].cf.request;
-    return callback(null, createResponse(Status.MovedPermanantly, request));
+    requestUrl = getRequestURL(event.body);
+    if (requestUrl === '') {
+      throw new Error('Empty request url!');
+    }
+    const shortUrl = createShortUrl();
+    const item = await getItem(shortUrl);
+    if (item && item.OriginalUrlHash === hash(requestUrl)) {
+      const visits = item.Visits++;
+      putItem(item.ShortUrl, item.OriginalUrlHash, visits);
+    } else {
+      putItem(shortUrl, requestUrl, 0);
+    }
+    callback(null, createResponse(Status.Ok, shortUrl, requestUrl));
+    return ok200(shortUrl, requestUrl);
   } catch (error) {
-    return callback(null, createResponse(Status.NotFound, BASE_URL!));
+    return callback(null, createResponse(Status.NotFound, '', requestUrl));
   }
 };
