@@ -7,14 +7,16 @@
     "start": "npm run build && node build/index.js",
     "build": "rimraf ./build && tsc",
     "test": "jest --setupFiles=dotenv/config --verbose",
-    "test:coverage": "jest --collect-coverage"
+    "test:coverage": "jest --collect-coverage",
+    "deploy": "npm i && npm run build && rm -rf ./node_modules && npm i --production && cp -r node_modules build && zip-build build dist --name -t %NAME%_lambda.%EXT%"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^15.0.0",
     "fs": "^0.0.1-security",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.3",
+    "zip-build": "^1.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.16.12",
